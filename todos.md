@@ -1,0 +1,3 @@
+- verify todos api routes using postman (get and posts requests) (complete)
+- implement modal and dialog components in add and edit todos.
+- 
