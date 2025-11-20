@@ -1,7 +1,13 @@
 import axiosInstance from '@/lib/axios';
-import { Todo, ApiResponse } from '@/types';
+import { Todo, ApiResponse, Dashboard } from '@/types';
 
 export const todoService = {
+    getDashboard: async (): Promise<Dashboard> => {
+        const response = await axiosInstance.get<ApiResponse<Dashboard>>('/todos/dashboard');
+
+        return response?.data.data || ({} as Dashboard);
+    },
+
     getAll: async (): Promise<Todo[]> => {
         const response = await axiosInstance.get<ApiResponse<Todo[]>>('/todos');
         return response.data.data || [];

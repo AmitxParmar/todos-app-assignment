@@ -4,7 +4,7 @@ export interface ITodo extends Document {
     title: string;
     startTime: string;
     endTime: string;
-    date?: string; // Storing as ISO string or similar
+    date?: Date; // Storing as Date object
     description?: string;
     isCompleted: boolean;
     createdAt: Date;
@@ -25,9 +25,10 @@ const TodoSchema: Schema = new Schema({
         required: [true, 'Please provide an end time for this todo.'],
     },
     date: {
-        type: String, // Storing as ISO string or similar
-        required: false,
+        type: Date,
+        set: (v: string | Date) => new Date(v),
     },
+
     description: {
         type: String,
         required: false,

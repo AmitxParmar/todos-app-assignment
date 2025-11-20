@@ -34,6 +34,9 @@ async function dbConnect() {
     }
 
     if (!cached.promise) {
+        mongoose.set("strictQuery", false);
+        mongoose.set("debug", true); // Enable debug mode
+
         const opts = {
             bufferCommands: false,
         };

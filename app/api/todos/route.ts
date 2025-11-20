@@ -16,6 +16,9 @@ export async function POST(request: Request) {
     try {
         await dbConnect();
         const body = await request.json();
+        if (body.date) {
+            body.date = new Date(body.date);
+        }
         const todo = await Todo.create(body);
         return NextResponse.json({ success: true, data: todo }, { status: 201 });
     } catch (error) {

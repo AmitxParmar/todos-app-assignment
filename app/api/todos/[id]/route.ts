@@ -10,6 +10,9 @@ export async function PUT(
         await dbConnect();
         const { id } = await params;
         const body = await request.json();
+        if (body.date) {
+            body.date = new Date(body.date);
+        }
         const todo = await Todo.findByIdAndUpdate(id, body, {
             new: true,
             runValidators: true,

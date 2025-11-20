@@ -53,7 +53,7 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
             title: values.text,
             startTime: values.startTime,
             endTime: values.endTime,
-            date: values.date ? values.date.toISOString() : undefined,
+            date: values.date ? new Date(values.date) : undefined,
             description: values.description,
             isCompleted: false,
         });
@@ -68,7 +68,7 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
                     control={form.control}
                     name="text"
                     render={({ field }) => (
-                        <FormItem className="">
+                        <FormItem>
                             <FormLabel className="text-slate-500 text-[12px] font-medium">Task title</FormLabel>
                             <FormControl>
                                 <Input placeholder="Doing Homework" {...field} className="h-12 mx-auto border-slate-200 bg-white" />
