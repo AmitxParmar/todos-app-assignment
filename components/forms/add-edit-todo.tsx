@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { useAddTodo } from "@/hooks/useTodos";
+import { useAddTodo, useUpdateTodo } from "@/hooks/useTodos";
 
 const formSchema = z.object({
     text: z.string().min(1, "Task title is required"),
@@ -31,39 +31,84 @@ const formSchema = z.object({
     description: z.string().optional(),
 });
 
-interface AddTodoFormProps {
+interface TodoFormProps {
+    todo?: {
+        id: string;
+        title: string;
+        startTime?: string | null;
+        endTime?: string | null;
+        date?: Date | null;
+        description?: string | null;
+        isCompleted: boolean;
+    };
     onSuccess?: () => void;
 }
 
-export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
+export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
     const { mutate: addTodo } = useAddTodo();
+    const { mutate: updateTodo } = useUpdateTodo();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            text: "",
-            startTime: "",
-            endTime: "",
-            description: "",
-        },
+        defaultValues: todo
+            ? {
+                text: todo.title,
+                startTime: todo.startTime || "",
+                endTime: todo.endTime || "",
+                date: todo.date ? new Date(todo.date) : undefined,
+                description: todo.description || "",
+            }
+            : {
+                text: "",
+                startTime: "",
+                endTime: "",
+                description: "",
+            },
     });
 
+    // Reset form when todo prop changes (for edit mode)
+    React.useEffect(() => {
+        if (todo) {
+            form.reset({
+                text: todo.title,
+                startTime: todo.startTime || "",
+                endTime: todo.endTime || "",
+                date: todo.date ? new Date(todo.date) : undefined,
+                description: todo.description || "",
+            });
+        }
+    }, [todo, form]);
+
     function onSubmit(values: z.infer<typeof formSchema>) {
-        addTodo({
-            title: values.text,
-            startTime: values.startTime,
-            endTime: values.endTime,
-            date: values.date ? new Date(values.date) : undefined,
-            description: values.description,
-            isCompleted: false,
-        });
+        if (todo) {
+            updateTodo({
+                id: todo.id,
+                updates: {
+                    title: values.text,
+                    startTime: values.startTime,
+                    endTime: values.endTime,
+                    date: values.date ? new Date(values.date) : undefined,
+                    description: values.description,
+                    isCompleted: todo.isCompleted,
+                }
+            });
+        } else {
+            addTodo({
+                title: values.text,
+                startTime: values.startTime,
+                endTime: values.endTime,
+                date: values.date ? new Date(values.date) : undefined,
+                description: values.description,
+                isCompleted: false,
+            });
+        }
         form.reset();
         onSuccess?.();
     }
 
     return (
         <Form {...form} >
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6  mx-auto" >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 overflow-y-auto overflow-x-hidden pb-24 mx-auto" >
                 <FormField
                     control={form.control}
                     name="text"
@@ -179,7 +224,7 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
                 />
 
                 <Button type="submit" className="w-full rounded-none h-12 text-lg bg-custom-blue hover:bg-custom-blue/80 shadow-lg shadow-custom-blue/20 mt-4">
-                    Create task
+                    {todo ? "Save changes" : "Create task"}
                 </Button>
             </form>
         </Form>

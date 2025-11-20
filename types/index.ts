@@ -21,3 +21,16 @@ export interface Dashboard {
     pendingTasks: number;
     progressPercent: number;
 }
+
+export interface PaginatedResponse<T> {
+    success: boolean;
+    data: T[];
+    nextCursor: string | null;
+    hasMore: boolean;
+}
+
+export interface SearchParams {
+    q?: string;
+    cursor?: string;
+    limit?: number;
+}

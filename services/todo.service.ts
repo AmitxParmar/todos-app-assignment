@@ -1,5 +1,5 @@
 import axiosInstance from '@/lib/axios';
-import { Todo, ApiResponse, Dashboard } from '@/types';
+import { Todo, ApiResponse, Dashboard, PaginatedResponse, SearchParams } from '@/types';
 
 export const todoService = {
     getDashboard: async (): Promise<Dashboard> => {
@@ -18,12 +18,22 @@ export const todoService = {
         return response.data.data!;
     },
 
-    update: async (id: string, isCompleted: boolean): Promise<Todo> => {
-        const response = await axiosInstance.put<ApiResponse<Todo>>(`/todos/${id}`, { isCompleted });
+    update: async (id: string, updates: Partial<Todo>): Promise<Todo> => {
+        const response = await axiosInstance.put<ApiResponse<Todo>>(`/todos/${id}`, updates);
         return response.data.data!;
     },
 
     delete: async (id: string): Promise<void> => {
         await axiosInstance.delete(`/todos/${id}`);
+    },
+
+    search: async (params: SearchParams): Promise<PaginatedResponse<Todo>> => {
+        const queryParams = new URLSearchParams();
+        if (params.q) queryParams.append('q', params.q);
+        if (params.cursor) queryParams.append('cursor', params.cursor);
+        if (params.limit) queryParams.append('limit', params.limit.toString());
+
+        const response = await axiosInstance.get<PaginatedResponse<Todo>>(`/todos?${queryParams.toString()}`);
+        return response.data;
     },
 };

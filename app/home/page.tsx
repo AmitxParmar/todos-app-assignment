@@ -1,25 +1,24 @@
 'use client'
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { CheckSquare, Loader2, Plus, XSquare } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { AddTodoForm } from "@/components/forms/add-edit-todo";
+import { AddEditTodoForm } from "@/components/forms/add-edit-todo";
 import { Button } from "@/components/ui/button";
 import { useDashboard } from "@/hooks/useTodos";
 import Todo from "@/components/common/todo";
 import TodoStats from "@/components/todo-stats";
 
 export default function HomePage() {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [openViewAll, setOpenViewAll] = useState(false);
     const { data: dashboard, isLoading, error } = useDashboard();
 
 
@@ -30,18 +29,19 @@ export default function HomePage() {
     return (
         <main className="min-h-screen w-screen px-6 py-8 pb-24 relative">
             {/* Search Bar */}
-            <div className="relative mb-8">
+            <div className="relative mb-8 cursor-pointer" onClick={() => router.push('/search')}>
                 <Input
                     type="text"
                     placeholder="Search for a task"
-                    className="pl-4 pr-10 py-6 placeholder:text-xs placeholder:font-light rounded-sm bg-white border-[#E6E6E6] "
+                    className="pl-4 pr-10 py-6 placeholder:text-xs placeholder:font-light rounded-sm bg-white border-[#E6E6E6] cursor-pointer"
+                    readOnly
                 />
                 <Image
                     src={`/assets/search.svg`}
                     alt="Search"
                     width={24}
                     height={24}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 />
             </div>
 
@@ -97,7 +97,7 @@ export default function HomePage() {
 
                     <DialogTitle className="mb-8">Add New Task</DialogTitle>
 
-                    <AddTodoForm onSuccess={() => setOpen(false)} />
+                    <AddEditTodoForm onSuccess={() => setOpen(false)} />
                 </DialogContent>
             </Dialog>
         </main>
