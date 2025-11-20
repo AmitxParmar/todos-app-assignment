@@ -7,8 +7,8 @@ export const todoService = {
         return response.data.data || [];
     },
 
-    create: async (text: string): Promise<Todo> => {
-        const response = await axiosInstance.post<ApiResponse<Todo>>('/todos', { text });
+    create: async (todoData: Partial<Todo>): Promise<Todo> => {
+        const response = await axiosInstance.post<ApiResponse<Todo>>('/todos', todoData);
         return response.data.data!;
     },
 

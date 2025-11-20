@@ -1,15 +1,28 @@
+'use client'
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Trash2, Edit2, CheckSquare, XSquare } from "lucide-react";
+import { CheckSquare, Plus, XSquare } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { AddTodoForm } from "@/components/forms/add-todo";
+import { Button } from "@/components/ui/button";
+import { useGetTodos } from "@/hooks/useTodos";
 
 export default function HomePage() {
+    const [open, setOpen] = useState(false);
+    const { data: todos, isLoading, error } = useGetTodos();
+
     return (
-        <main className="min-h-screen bg-slate-50 px-6 py-8 pb-24 relative">
-
-
+        <main className="min-h-screen w-screen bg-slate-50 px-6 py-8 pb-24 relative">
             {/* Search Bar */}
             <div className="relative mb-8">
                 <Input
@@ -83,17 +96,12 @@ export default function HomePage() {
                 </div>
 
                 <div className="space-y-4">
-                    {[
-                        { id: 1, text: "Finishing Wireframe", completed: false },
-                        { id: 2, text: "Meeting with team", completed: false },
-                        { id: 3, text: "Buy a cat food", completed: true },
-                        { id: 4, text: "Finishing daily commission", completed: true },
-                    ].map((task) => (
-                        <div key={task.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-50">
+                    {todos?.map((todo) => (
+                        <div key={todo._id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-50">
                             <div className="flex items-center gap-3">
-                                <Checkbox checked={task.completed} className="h-5 w-5 border-2 border-blue-400 data-[state=checked]:bg-blue-400 data-[state=checked]:text-white rounded" />
-                                <span className={`text-sm font-medium ${task.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
-                                    {task.text}
+                                <Checkbox checked={todo.isCompleted} className="h-5 w-5 border-2 border-blue-400 data-[state=checked]:bg-blue-400 data-[state=checked]:text-white rounded" />
+                                <span className={`text-sm font-medium ${todo.isCompleted ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
+                                    {todo.title}
                                 </span>
                             </div>
                             <div className="flex gap-3 text-slate-300">
@@ -105,12 +113,22 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* FAB */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
-                <Button className="size-[76px] rounded-full bg-custom-blue hover:bg-blue-700 shadow-xl shadow-blue-600/30 flex items-center justify-center">
-                    <Plus className="size-8s text-white" />
-                </Button>
-            </div>
+            {/* FAB and Dialog */}
+            <Dialog open={open} onOpenChange={setOpen} >
+                <DialogTrigger asChild>
+                    <Button
+                        className="fixed bottom-8 left-1/2 -translate-x-1/2 size-[76px] rounded-full bg-custom-blue hover:bg-blue-700 flex items-center justify-center"
+                    >
+                        <Plus className="size-8 text-white" />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="p-6 fixed inset-x-0 bottom-0 top-[35%] rounded-none translate-0 min-w-screen">
+                    <DialogHeader>
+                        <DialogTitle>Add New Task</DialogTitle>
+                    </DialogHeader>
+                    <AddTodoForm />
+                </DialogContent>
+            </Dialog>
         </main>
     );
 }
