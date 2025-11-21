@@ -27,13 +27,13 @@ export default function HomePage() {
     if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 size={40} className="animate-spin" /></div>
 
     return (
-        <main className="min-h-screen w-screen px-6 py-8 pb-24 relative">
+        <main className="min-h-screen w-screen px-6 py-8 pb-24 relative overflow-x-hidden">
             {/* Search Bar */}
             <div className="relative mb-8 cursor-pointer" onClick={() => router.push('/search')}>
                 <Input
                     type="text"
                     placeholder="Search for a task"
-                    className="pl-4 pr-10 py-6 placeholder:text-xs placeholder:font-light rounded-sm bg-white border-[#E6E6E6] cursor-pointer"
+                    className="w-full pl-4 pr-10 py-6 placeholder:text-xs placeholder:font-light rounded-sm bg-white border-[#E6E6E6] cursor-pointer"
                     readOnly
                 />
                 <Image
@@ -93,7 +93,7 @@ export default function HomePage() {
                         <Plus className="size-8 text-white" />
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="p-6 fixed inset-x-0 bottom-0 top-[35%] rounded-none translate-0 min-w-screen">
+                <DialogContent className="p-4 fixed inset-x-0 bottom-0 top-[35%] rounded-none translate-0 w-screen max-w-full">
 
                     <DialogTitle className="mb-8">Add New Task</DialogTitle>
 

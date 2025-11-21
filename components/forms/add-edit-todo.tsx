@@ -108,37 +108,46 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
 
     return (
         <Form {...form} >
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 overflow-y-auto overflow-x-hidden pb-24 mx-auto" >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto overflow-x-hidden pb-2 px-1 max-h-[calc(65vh-4rem)]" >
                 <FormField
                     control={form.control}
                     name="text"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-slate-500 text-[12px] font-medium">Task title</FormLabel>
+                            <FormLabel className="text-slate-500 text-xs font-medium">Task title</FormLabel>
                             <FormControl>
-                                <Input placeholder="Doing Homework" {...field} className="h-12 mx-auto border-slate-200 bg-white" />
+                                <Input
+                                    placeholder="Doing Homework"
+                                    {...field}
+                                    className="h-11 border-slate-200 bg-white focus-visible:ring-1"
+                                />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className="text-xs" />
                         </FormItem>
                     )}
                 />
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                     <FormField
                         control={form.control}
                         name="startTime"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-slate-500 text-[12px] font-medium">Set Time</FormLabel>
+                                <FormLabel className="text-slate-500 text-xs font-medium">Start Time</FormLabel>
                                 <FormControl>
                                     <div className="relative">
-                                        <Input type="time" {...field} className="h-12  border-slate-200 bg-white pl-10" />
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                                        <Input
+                                            placeholder="Start"
+                                            type="time"
+                                            {...field}
+                                            className="h-11 w-full pl-9 border-slate-200 bg-white text-sm focus-visible:ring-1"
+                                        />
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
                                             <Clock className="h-4 w-4" />
                                         </span>
                                     </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -147,16 +156,21 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
                         name="endTime"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-slate-500 text-[12px] font-medium">&nbsp;</FormLabel>
+                                <FormLabel className="text-slate-500 text-xs font-medium">End Time</FormLabel>
                                 <FormControl>
                                     <div className="relative">
-                                        <Input type="time" {...field} className="h-12  border-slate-200 bg-white pl-10" />
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                                        <Input
+
+                                            type="time"
+                                            {...field}
+                                            className="h-11 w-full pl-9 border-slate-200 bg-white text-sm focus-visible:ring-1"
+                                        />
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
                                             <Clock className="h-4 w-4" />
                                         </span>
                                     </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -167,14 +181,14 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
                     name="date"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel className="text-slate-500 text-[12px] font-medium">Set Date</FormLabel>
+                            <FormLabel className="text-slate-500 text-xs font-medium">Set Date</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "h-12 w-full pl-3 text-left font-normal rounded-none border-slate-200 bg-white",
+                                                "h-11 w-full pl-3 text-left font-normal text-sm rounded-none border-slate-200 bg-white focus-visible:ring-1",
                                                 !field.value && "text-muted-foreground"
                                             )}
                                         >
@@ -187,20 +201,19 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto  p-0" align="start">
+                                <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
-                                        className=""
                                         mode="single"
                                         selected={field.value}
                                         onSelect={field.onChange}
                                         disabled={(date) =>
                                             date < new Date("1900-01-01")
                                         }
-                                        autoFocus
+                                        initialFocus
                                     />
                                 </PopoverContent>
                             </Popover>
-                            <FormMessage />
+                            <FormMessage className="text-xs" />
                         </FormItem>
                     )}
                 />
@@ -210,20 +223,23 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
                     name="description"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-slate-500 text-[12px] font-medium">Description</FormLabel>
+                            <FormLabel className="text-slate-500 text-xs font-medium">Description</FormLabel>
                             <FormControl>
                                 <Textarea
                                     placeholder="Add Description"
-                                    className="resize-none min-h-[100px]  border-slate-200 rounded-none bg-white"
+                                    className="resize-none min-h-[80px] border-slate-200 rounded-none bg-white text-sm focus-visible:ring-1"
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className="text-xs" />
                         </FormItem>
                     )}
                 />
 
-                <Button type="submit" className="w-full rounded-none h-12 text-lg bg-custom-blue hover:bg-custom-blue/80 shadow-lg shadow-custom-blue/20 mt-4">
+                <Button
+                    type="submit"
+                    className="w-full rounded-none h-11 text-base bg-custom-blue hover:bg-custom-blue/90 shadow-lg shadow-custom-blue/20 mt-2 sticky bottom-0"
+                >
                     {todo ? "Save changes" : "Create task"}
                 </Button>
             </form>
