@@ -73,7 +73,7 @@ export default function HomePage() {
             <div className="mb-8">
                 <div className="flex justify-between items-end mb-4">
                     <h2 className="text-lg font-bold text-slate-900">Tasks Today</h2>
-                    <button className="text-sm text-blue-600 font-medium">View All</button>
+                    <Button variant="ghost" onClick={() => router.push('/search')} className="text-sm text-blue-600 font-medium">View All</Button>
                 </div>
 
                 {/* Task list */}
@@ -93,7 +93,7 @@ export default function HomePage() {
                         <Plus className="size-8 text-white" />
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="p-4 fixed inset-x-0 bottom-0 top-[35%] rounded-none translate-0 w-screen max-w-full">
+                <DialogContent className="p-4 fixed mx-auto inset-x-0 bottom-0 top-[35%] rounded-none translate-0 w-screen max-w-full">
 
                     <DialogTitle className="mb-8">Add New Task</DialogTitle>
 

@@ -3,7 +3,12 @@ import { Todo, ApiResponse, Dashboard, PaginatedResponse, SearchParams } from '@
 
 export const todoService = {
     getDashboard: async (): Promise<Dashboard> => {
-        const response = await axiosInstance.get<ApiResponse<Dashboard>>('/todos/dashboard');
+        // Get today's date in the client's local timezone
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+
+        const response = await axiosInstance.get<ApiResponse<Dashboard>>(`/todos/dashboard?date=${dateStr}`);
 
         return response?.data.data || ({} as Dashboard);
     },

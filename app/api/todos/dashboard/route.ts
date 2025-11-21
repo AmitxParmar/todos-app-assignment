@@ -2,19 +2,36 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Todo from '@/models/Todo';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         await dbConnect();
 
-        // Get today's date at midnight in local timezone
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const { searchParams } = new URL(request.url);
+        const dateParam = searchParams.get('date');
 
-        // Get tomorrow's date at midnight
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+        let today: Date;
+        let tomorrow: Date;
 
-        console.log('Dashboard query - Today:', today, 'Tomorrow:', tomorrow);
+        if (dateParam) {
+            // Use the date provided by the client (already in ISO format from client's local date)
+            today = new Date(dateParam);
+            today.setUTCHours(0, 0, 0, 0);
+            tomorrow = new Date(today);
+            tomorrow.setUTCDate(today.getUTCDate() + 1);
+        } else {
+            // Fallback: Get today's date at midnight in UTC
+            const now = new Date();
+            today = new Date(Date.UTC(
+                now.getUTCFullYear(),
+                now.getUTCMonth(),
+                now.getUTCDate(),
+                0, 0, 0, 0
+            ));
+            tomorrow = new Date(today);
+            tomorrow.setUTCDate(today.getUTCDate() + 1);
+        }
+
+        console.log('Dashboard query - Today:', today.toISOString(), 'Tomorrow:', tomorrow.toISOString());
 
         // Find todos for today using Date objects
         const todosForToday = await Todo.find({
