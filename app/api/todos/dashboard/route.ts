@@ -13,11 +13,11 @@ export async function GET(request: Request) {
         let tomorrow: Date;
 
         if (dateParam) {
-            // Use the date provided by the client (already in ISO format from client's local date)
-            today = new Date(dateParam);
-            today.setUTCHours(0, 0, 0, 0);
-            tomorrow = new Date(today);
-            tomorrow.setUTCDate(today.getUTCDate() + 1);
+            // Parse the YYYY-MM-DD string as UTC midnight
+            // This ensures consistent behavior regardless of server timezone
+            const [year, month, day] = dateParam.split('-').map(Number);
+            today = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            tomorrow = new Date(Date.UTC(year, month - 1, day + 1, 0, 0, 0, 0));
         } else {
             // Fallback: Get today's date at midnight in UTC
             const now = new Date();
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
             tomorrow.setUTCDate(today.getUTCDate() + 1);
         }
 
-        console.log('Dashboard query - Today:', today.toISOString(), 'Tomorrow:', tomorrow.toISOString());
+        console.log('Dashboard query - Date param:', dateParam, 'Today:', today.toISOString(), 'Tomorrow:', tomorrow.toISOString());
 
         // Find todos for today using Date objects
         const todosForToday = await Todo.find({

@@ -3,10 +3,12 @@ import { Todo, ApiResponse, Dashboard, PaginatedResponse, SearchParams } from '@
 
 export const todoService = {
     getDashboard: async (): Promise<Dashboard> => {
-        // Get today's date in the client's local timezone
+        // Get today's date in the client's local timezone and format it properly
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`; // YYYY-MM-DD format in local timezone
 
         const response = await axiosInstance.get<ApiResponse<Dashboard>>(`/todos/dashboard?date=${dateStr}`);
 
