@@ -31,7 +31,6 @@ export async function GET(request: Request) {
             tomorrow.setUTCDate(today.getUTCDate() + 1);
         }
 
-        console.log('Dashboard query - Date param:', dateParam, 'Today:', today.toISOString(), 'Tomorrow:', tomorrow.toISOString());
 
         // Find todos for today using Date objects
         const todosForToday = await Todo.find({
@@ -41,7 +40,7 @@ export async function GET(request: Request) {
             },
         }).sort({ createdAt: -1 }).lean();
 
-        console.log('Found todos for today:', todosForToday.length);
+
 
         // Count completed and total tasks for today only
         const completedTasksToday = todosForToday.filter(todo => todo.isCompleted).length;

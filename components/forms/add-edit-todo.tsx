@@ -108,7 +108,7 @@ export function AddEditTodoForm({ todo, onSuccess }: TodoFormProps) {
 
     return (
         <Form {...form} >
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto overflow-x-hidden pb-2 px-1 max-h-[calc(65vh-4rem)]" >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto overflow-x-hidden pb-2 px-1" >
                 <FormField
                     control={form.control}
                     name="text"

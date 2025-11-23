@@ -78,9 +78,13 @@ export default function HomePage() {
 
                 {/* Task list */}
                 <div className="space-y-4">
-                    {dashboard?.todosForToday?.map((todo) => (
-                        <Todo key={todo._id} todo={todo} />
-                    ))}
+                    {dashboard?.todosForToday && dashboard.todosForToday.length > 0 ? (
+                        dashboard.todosForToday.map((todo) => (
+                            <Todo key={todo._id} todo={todo} />
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 py-8">No tasks for today!</div>
+                    )}
                 </div>
             </div>
 
@@ -93,7 +97,7 @@ export default function HomePage() {
                         <Plus className="size-8 text-white" />
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="p-4 fixed mx-auto inset-x-0 bottom-0 top-[35%] rounded-none translate-0 w-screen max-w-full">
+                <DialogContent className="p-4 fixed mx-auto inset-x-0 bottom-0 top-[25%] rounded-none translate-0 w-screen max-w-full">
 
                     <DialogTitle className="mb-8">Add New Task</DialogTitle>
 

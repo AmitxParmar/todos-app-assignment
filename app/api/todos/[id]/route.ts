@@ -10,9 +10,27 @@ export async function PUT(
         await dbConnect();
         const { id } = await params;
         const body = await request.json();
+
+
+
         if (body.date) {
-            body.date = new Date(body.date);
+            // Handle YYYY-MM-DD string from frontend
+            if (typeof body.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
+                const [year, month, day] = body.date.split('-').map(Number);
+                body.date = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            } else {
+                // Fallback for other formats
+                const parsedDate = new Date(body.date);
+                body.date = new Date(Date.UTC(
+                    parsedDate.getUTCFullYear(),
+                    parsedDate.getUTCMonth(),
+                    parsedDate.getUTCDate(),
+                    0, 0, 0, 0
+                ));
+            }
+
         }
+
         const todo = await Todo.findByIdAndUpdate(id, body, {
             new: true,
             runValidators: true,
@@ -22,6 +40,7 @@ export async function PUT(
         }
         return NextResponse.json({ success: true, data: todo });
     } catch (error) {
+        console.error('PUT /api/todos/[id] error:', error);
         return NextResponse.json({ success: false, error: 'Failed to update todo' }, { status: 400 });
     }
 }

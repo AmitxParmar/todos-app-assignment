@@ -3,12 +3,12 @@ import { Todo, ApiResponse, Dashboard, PaginatedResponse, SearchParams } from '@
 
 export const todoService = {
     getDashboard: async (): Promise<Dashboard> => {
-        // Get today's date in the client's local timezone and format it properly
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
-        const dateStr = `${year}-${month}-${day}`; // YYYY-MM-DD format in local timezone
+        const dateStr = `${year}-${month}-${day}`;
+
 
         const response = await axiosInstance.get<ApiResponse<Dashboard>>(`/todos/dashboard?date=${dateStr}`);
 
@@ -21,12 +21,33 @@ export const todoService = {
     },
 
     create: async (todoData: Partial<Todo>): Promise<Todo> => {
-        const response = await axiosInstance.post<ApiResponse<Todo>>('/todos', todoData);
+        // Format date to YYYY-MM-DD if present to avoid timezone issues
+        const payload = { ...todoData };
+        if (payload.date instanceof Date) {
+            const date = payload.date;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            (payload as any).date = `${year}-${month}-${day}`;
+        }
+
+
+        const response = await axiosInstance.post<ApiResponse<Todo>>('/todos', payload);
         return response.data.data!;
     },
 
     update: async (id: string, updates: Partial<Todo>): Promise<Todo> => {
-        const response = await axiosInstance.put<ApiResponse<Todo>>(`/todos/${id}`, updates);
+        // Format date to YYYY-MM-DD if present to avoid timezone issues
+        const payload = { ...updates };
+        if (payload.date instanceof Date) {
+            const date = payload.date;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            (payload as any).date = `${year}-${month}-${day}`;
+        }
+
+        const response = await axiosInstance.put<ApiResponse<Todo>>(`/todos/${id}`, payload);
         return response.data.data!;
     },
 
